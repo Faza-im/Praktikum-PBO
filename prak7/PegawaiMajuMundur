@@ -1,0 +1,124 @@
+package prak7;
+import java.util.Scanner;
+
+public class PegawaiMajuMundur {
+    // Inner abstract class Pegawai
+    abstract static class Pegawai {
+        protected String nama;
+        protected int kehadiran;
+
+        public Pegawai(String nama, int kehadiran) {
+            this.nama = nama;
+            this.kehadiran = kehadiran;
+        }
+
+        public void lihatData() {
+            System.out.println("Nama Pegawai: " + nama);
+            System.out.println("Jumlah Kehadiran: " + kehadiran + " hari");
+        }
+
+        public abstract void hitungGaji();
+    }
+
+    // Inner class PegawaiKontrak
+    static class PegawaiKontrak extends Pegawai {
+        private int masaKontrak;
+
+        public PegawaiKontrak(String nama, int kehadiran, int masaKontrak) {
+            super(nama, kehadiran);
+            this.masaKontrak = masaKontrak;
+        }
+
+        @Override
+        public void hitungGaji() {
+            int gajiBersih = kehadiran * 75000;
+            System.out.println("Gaji Bersih Pegawai Kontrak: Rp " + gajiBersih);
+        }
+
+        @Override
+        public void lihatData() {
+            super.lihatData();
+            System.out.println("Masa Kontrak: " + masaKontrak + " bulan");
+        }
+    }
+
+    // Inner class PegawaiTetap
+    static class PegawaiTetap extends Pegawai {
+        private final int TUNJANGAN = 250000;
+
+        public PegawaiTetap(String nama, int kehadiran) {
+            super(nama, kehadiran);
+        }
+
+        @Override
+        public void hitungGaji() {
+            int gajiBersih = (kehadiran * 100000) + TUNJANGAN;
+            System.out.println("Gaji Bersih Pegawai Tetap: Rp " + gajiBersih);
+        }
+
+        @Override
+        public void lihatData() {
+            super.lihatData();
+            System.out.println("Tunjangan: Rp " + TUNJANGAN);
+        }
+    }
+
+    // Main method
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        Pegawai pegawai = null;
+
+        while (true) {
+            System.out.println("\nMENU UTAMA");
+            System.out.println("1. Input Data Pegawai");
+            System.out.println("2. Lihat Data Pegawai");
+            System.out.println("3. Keluar");
+            System.out.print("Pilihan Anda [1/2/3]? ");
+
+            int pilihan = scanner.nextInt();
+            scanner.nextLine(); // Mengonsumsi newline
+
+            switch (pilihan) {
+                case 1:
+                    System.out.print("Nama Pegawai: ");
+                    String nama = scanner.nextLine();
+                    System.out.print("Jumlah Kehadiran: ");
+                    int kehadiran = scanner.nextInt();
+                    System.out.println("Pilih Jenis Pegawai:");
+                    System.out.println("1. Pegawai Kontrak");
+                    System.out.println("2. Pegawai Tetap");
+                    System.out.print("Pilihan Anda [1/2]? ");
+                    int jenis = scanner.nextInt();
+
+                    if (jenis == 1) {
+                        System.out.print("Masa Kontrak (bulan): ");
+                        int masaKontrak = scanner.nextInt();
+                        pegawai = new PegawaiKontrak(nama, kehadiran, masaKontrak);
+                    } else if (jenis == 2) {
+                        pegawai = new PegawaiTetap(nama, kehadiran);
+                    } else {
+                        System.out.println("Pilihan tidak valid.");
+                    }
+                    break;
+
+                case 2:
+                    if (pegawai == null) {
+                        System.out.println("Belum ada data pegawai.");
+                    } else {
+                        pegawai.lihatData();
+                        pegawai.hitungGaji();
+                    }
+                    break;
+
+                case 3:
+                    System.out.println("Program selesai.");
+                    scanner.close();
+                    System.exit(0);
+                    break;
+
+                default:
+                    System.out.println("Pilihan tidak valid. Silakan coba lagi.");
+            }
+        }
+    }
+}
